@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\admin\adminController;
 use App\Http\Controllers\Backend\admin\category\categoryController;
+use App\Http\Controllers\Backend\admin\employee\EmployeeController;
+use App\Http\Controllers\LoginController;
 
 
 /*
@@ -16,16 +18,12 @@ use App\Http\Controllers\Backend\admin\category\categoryController;
 |
 */
 
-Route::get('/', function () {
-    return view('auth.login');
-});
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [LoginController::class, 'showlogin']);
+Route::post('/login', [LoginController::class, 'logincheck'])->name('login');
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
 
-Route::group(['name' => 'admin', 'as' => 'admin.'], function () 
+Route::group(['name' => 'admin', 'as' => 'admin.'], function ()
 {
 
         Route::get('/admin-Dashboard', [adminController::class, 'index'])->name('index');
@@ -37,7 +35,7 @@ Route::group(['name' => 'admin', 'as' => 'admin.'], function ()
  });
 
 
-Route::group(['name' => 'category', 'as' => 'category.'], function () 
+Route::group(['name' => 'category', 'as' => 'category.'], function ()
 {
 
         Route::get('/category', [categoryController::class, 'index'])->name('index');
@@ -46,4 +44,16 @@ Route::group(['name' => 'category', 'as' => 'category.'], function ()
         Route::put('category-update/{id}', [categoryController::class, 'update'])->name('update');
         Route::get('category-datatable-list', [categoryController::class, 'datatable'])->name('datatable');
         Route::get('category-destroy/{id}', [categoryController::class, 'destroy'])->name('destroy');
+ });
+
+
+ Route::group(['name' => 'employee', 'as' => 'employee.'], function ()
+{
+
+        Route::get('/employee', [EmployeeController::class, 'index'])->name('index');
+        Route::POST('employee-list-store', [EmployeeController::class, 'store'])->name('store');
+        Route::get('employee-edit/{id}', [EmployeeController::class, 'edit'])->name('edit');
+        Route::put('employee-update/{id}', [EmployeeController::class, 'update'])->name('update');
+        Route::get('employee-datatable-list', [EmployeeController::class, 'datatable'])->name('datatable');
+        Route::get('employee-destroy/{id}', [EmployeeController::class, 'destroy'])->name('destroy');
  });
